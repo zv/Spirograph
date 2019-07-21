@@ -1,25 +1,43 @@
-import { ContextManager, Position } from './context-manager'
+import { ContextManager, Coordinates } from './context-manager'
 
-const getCircle = (radians: number, radius: number) =>
-  ({
-    x: Math.cos(radians) * radius,
-    y: Math.sin(radians) * radius
-  })
+// The (changing) rate at which the epicycles are drawn.
+let RATE = 34;
+
+/**
+ * Get the position of a dot on the perimeter of a circle, given an angle from
+ * the center.
+ */
+const getCircle = (radians: number, radius: number) => ({
+  x: Math.cos(radians) * radius,
+  y: Math.sin(radians) * radius
+})
+
+/**
+ * Get the position of a dot on the perimeter of a Square, given an angle from
+ * the center.
+ */
+const getSquare = (radians: number, size: number) => {
+  const t = radians;
+  const m = (t: number) => Math.max(Math.abs(Math.cos(t)), Math.abs(Math.sin(t)))
+  return {
+    x: (size / m(t)) * Math.cos(t),
+    y: (size / m(t)) * Math.sin(t)
+  }
+}
 
 class Dot {
-  // public move: DotBehavior;
-  public x: number;
-  public y: number;
-  public ix: number;
-  public iy: number;
-  public radius: number;
-  private ctx: ContextManager;
-  private size: number;
-  private angle: number;
+  private readonly ctx: ContextManager;
+  x: number;
+  y: number;
+  readonly ix: number;
+  readonly iy: number;
+  radius: number;
+  size: number;
+  angle: number;
 
   constructor(
     radius: number,
-    initial: Position,
+    initial: Coordinates,
     size: number,
     angle: number,
     ctx: ContextManager
@@ -34,50 +52,62 @@ class Dot {
     this.angle = angle;
   }
 
-  epicycle(n: number) {
-    let { x, y } = getCircle((2*this.angle) + n, this.radius)
+  draw({ x, y }: Coordinates) {
+    this.x = this.ix + x;
+    this.y = this.iy + y;
     this.ctx.circle({
-      x: this.ix + x,
-      y: this.iy + y
+      x: this.x,
+      y: this.y
     }, this.size)
   }
+
+  epicycle(n: number) {
+    this.draw(getCircle((RATE * this.angle) + n, this.radius * 1.5))
+  }
+
+  episquare(n: number) {
+    this.draw(getSquare((RATE * this.angle) + n, this.radius))
+  }
+
+  lineToCenter() {
+    let { x, y } = this
+    this.ctx.lineToCenter({ x, y })
+  }
 }
-
-
-let G = 1;
-setInterval(() => {
-  let thing = document.querySelector('.number')
-  thing.innerHTML = `${G}`;
-  G += 1
-}, 1500)
 
 export class MovingDots {
   private readonly ctx: ContextManager; // HTML Canvas's 2D context
   private dots: Dot[] = [];
 
-  /**
-   * Creates a new animation and sets properties of the animation
-   * @param canvas the HTML Canvas on which to draw
-   */
   constructor(canvas: HTMLCanvasElement) {
     this.ctx = new ContextManager(canvas);
-
-    let count = 50;
+    // Setup the dots
+    let count = 100;
     let radius = 120;
-
     let period = (Math.PI * 2) / count;
-    let sz = 3;
-
+    let sz = 5;
     for (let i = 0; i < count; i++) {
       let { x, y } = getCircle(period * i, radius)
       this.dots.push(new Dot(radius, { x, y }, sz, period * i, this.ctx))
     }
   }
 
+  // Tick action
   draw(nx: number = 0) {
     this.ctx.clear()
-    this.dots.map(dot => dot.epicycle(nx))
+    this.dots.forEach(dot => dot.epicycle(nx))
+    this.dots.forEach((dot, i) => {
+      let len = this.dots.length
+      let { x, y } = this.dots[((i + (len + (len / 2))) % len)]
+      this.ctx.line({ x: dot.x, y: dot.y }, { x, y })
+    })
 
     window.requestAnimationFrame(() => this.draw(nx + 0.01));
   }
 }
+
+// Change the rate
+setInterval(() => {
+  RATE += 1
+  document.querySelector('.rate').innerHTML = `${RATE}`;
+}, 1000)
