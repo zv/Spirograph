@@ -75,12 +75,24 @@ class Dot {
   }
 }
 
+type DrawConfig = {
+  drawLines: boolean,
+  rate: null | number;
+};
+
 export class MovingDots {
   private readonly ctx: ContextManager; // HTML Canvas's 2D context
   private dots: Dot[] = [];
 
+
+  public config: DrawConfig;
+
   constructor(canvas: HTMLCanvasElement) {
     this.ctx = new ContextManager(canvas);
+    this.config = {
+      drawLines: true,
+      rate: null
+    }
     // Setup the dots
     let count = 100;
     let radius = 120;
@@ -90,6 +102,16 @@ export class MovingDots {
       let { x, y } = getCircle(period * i, radius)
       this.dots.push(new Dot(radius, { x, y }, sz, period * i, this.ctx))
     }
+
+    // Change the rate
+    setInterval(() => {
+      if (this.config.rate) {
+        RATE = this.config.rate
+      } else {
+        RATE += 1
+      }
+      document.querySelector('.rate').innerHTML = `${RATE}`;
+    }, 1000)
   }
 
   // Tick action
@@ -99,15 +121,12 @@ export class MovingDots {
     this.dots.forEach((dot, i) => {
       let len = this.dots.length
       let { x, y } = this.dots[((i + (len + (len / 2))) % len)]
-      this.ctx.line({ x: dot.x, y: dot.y }, { x, y })
+      if (this.config.drawLines) {
+        this.ctx.line({ x: dot.x, y: dot.y }, { x, y })
+      }
     })
 
     window.requestAnimationFrame(() => this.draw(nx + 0.01));
   }
 }
 
-// Change the rate
-setInterval(() => {
-  RATE += 1
-  document.querySelector('.rate').innerHTML = `${RATE}`;
-}, 1000)
