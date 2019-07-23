@@ -1,4 +1,5 @@
 * Moving Dots
+
   This repository demonstrates curve traced by points on the perimeter of a
   circle which are rolloing around an interior fixed circle of the same radius.
   
@@ -9,3 +10,10 @@
    - Space :: Turn on/off interior lines
    - s :: Stop/Start radius rate change.
 
+**  Examples
+   
+*** Cardiod
+    [[file:img/cardiod.png]]
+  
+*** Star
+    [[file:img/star.png]]
