@@ -1,6 +1,6 @@
 * Spirograph
 
-  This repository generates [Epitrochoids](https://en.wikipedia.org/wiki/Epitrochoid), curves traced by points on the perimeter of a circle which roll around an interior fixed circle. 
+  This repository generates [[https://en.wikipedia.org/wiki/Epitrochoid][Epitrochoids]], curves traced by points on the perimeter of a circle which roll around an interior fixed circle. 
   
   Spirograph can also generate figures with an interior that is a square, triangle and other figures. Likewise, the curve traced can be one traced by a square moving about a circle (in addition to the better known circle moving about an interior circle).
   
