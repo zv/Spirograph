@@ -1,7 +1,10 @@
-* Moving Dots
+* Spirograph
 
-  This repository demonstrates curve traced by points on the perimeter of a
-  circle which are rolloing around an interior fixed circle of the same radius.
+  This repository generates [Epitrochoids](https://en.wikipedia.org/wiki/Epitrochoid), curves traced by points on the perimeter of a circle which roll around an interior fixed circle. 
+  
+  Spirograph can also generate figures with an interior that is a square, triangle and other figures. Likewise, the curve traced can be one traced by a square moving about a circle (in addition to the better known circle moving about an interior circle).
+  
+  By default, it will demonstrate the different rates at which the outer circle can trace the interior, a new one each second, with it's rate shown in the upper right-hand corner.
   
 ** Build
    After pulling in dependencies, you can run =webpack-dev-server= with either ~npm start~ or ~yarn start~
