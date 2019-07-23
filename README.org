@@ -1,0 +1,11 @@
+* Moving Dots
+  This repository demonstrates curve traced by points on the perimeter of a
+  circle which are rolloing around an interior fixed circle of the same radius.
+  
+** Build
+   After pulling in dependencies, you can run =webpack-dev-server= with either ~npm start~ or ~yarn start~
+   
+** Options
+   - Space :: Turn on/off interior lines
+   - s :: Stop/Start radius rate change.
+
