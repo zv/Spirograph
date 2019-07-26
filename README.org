@@ -16,7 +16,10 @@
 **  Examples
    
 *** Cardiod
-    [[file:img/cardiod.png]]
-  
+
+    #+HTML: <p align="center"><img src="img/cardiod.png" /></p>
+
+
 *** Star
-    [[file:img/star.png]]
+   
+    #+HTML: <p align="center"><img src="img/star.png" /></p>
